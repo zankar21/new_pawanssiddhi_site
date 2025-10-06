@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+**/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -19,9 +20,11 @@
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
+Thumbs.db
 *.pem
 
 # debug
@@ -32,10 +35,19 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
-
-# vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
+# (Do NOT ignore next-env.d.ts so it can be committed)
+# next-env.d.ts  <-- removed
+
+# compiler caches
+/.swc
+/.turbo
+
+# editors
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
