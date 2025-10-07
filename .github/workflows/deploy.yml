@@ -12,9 +12,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      # If you don't have package-lock.json, swap to "npm install"
+
+      # Use npm ci only if you have package-lock.json; else switch to npm install
       - run: npm ci
+
       - run: npm run build   # Next exports to /out
+
       - uses: actions/upload-artifact@v4
         with:
           name: out
@@ -32,16 +35,15 @@ jobs:
       - name: FTP deploy
         uses: SamKirkland/FTP-Deploy-Action@v4
         with:
-          # Use your Hostinger values (already saved in repo secrets)
           server: ${{ secrets.FTP_SERVER }}      # e.g. 145.79.210.250
           username: ${{ secrets.FTP_USERNAME }}  # e.g. u978435443
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp                          # <-- plain FTP for port 21
+          protocol: ftp
           port: 21
           local-dir: out/
-          server-dir: public_html/               # per hPanel screenshot
-          dangerous-clean-slate: true            # wipe old files
-          exclude: |                             # keep .git stuff + .htaccess
+          server-dir: public_html/
+          dangerous-clean-slate: true
+          exclude: |
             **/.git*
             **/.git*/**
             .htaccess
