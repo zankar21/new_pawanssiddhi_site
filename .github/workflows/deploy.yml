@@ -1,46 +1,46 @@
-name: Build & Deploy (Hostinger)
+name: Build & Deploy (Hostinger via lftp)
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      # swap to `npm install` if you don't have package-lock.json
+
+      # Faster installs when package-lock.json exists; fall back if not
       - run: npm ci || npm install
-      - run: npm run build
-      - uses: actions/upload-artifact@v4
-        with:
-          name: out
-          path: out
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: out
-          path: out
+      - run: npm run build  # Next exports to /out
 
-      - name: FTP deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp
-          port: 21
-          local-dir: out/
-          server-dir: public_html/
-          dangerous-clean-slate: true
-          exclude: |
-            **/.git*
-            **/.git*/**
-            .htaccess
+      # OPTIONAL: if you keep .htaccess in your repo under /public, push it too
+      - name: Include .htaccess (optional)
+        run: |
+          if [ -f public/.htaccess ]; then
+            cp public/.htaccess out/.htaccess
+          fi
+
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Deploy to Hostinger via FTP
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}       # 145.79.210.250
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}   # u978435443
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          lftp -e "
+            set ftp:ssl-allow no;          # plain FTP (Hostinger shows port 21)
+            open -u ${FTP_USERNAME},${FTP_PASSWORD} ${FTP_SERVER};
+            mirror -R --parallel=4 --verbose \
+              --delete \
+              --exclude-glob .git* \
+              out/ public_html/;
+            bye
+          "
