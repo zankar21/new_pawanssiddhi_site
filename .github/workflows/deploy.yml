@@ -1,0 +1,39 @@
+name: Build & Deploy (Hostinger)
+
+on:
+  push:
+    branches: [ main ]  # or your branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run build    # Next will export to /out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: out
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: out
+          path: out
+      - name: FTP deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ secrets.FTP_SERVER }}      # e.g. ftp.pawanssiddhi.in
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: out/
+          server-dir: public_html/
+          dangerous-clean-slate: true            # clears broken files first
