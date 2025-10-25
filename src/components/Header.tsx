@@ -1,20 +1,44 @@
-"use client";
-import Link from 'next/link';
+// src/components/Header.tsx
+import Link from "next/link";
+// import Image from "next/image"; // not used currently
+import NavClient from "./NavClient";
+import EmbossedLogo from "./EmbossedLogo";
 
 export default function Header() {
   return (
-    <header className="bg-primary text-white px-6 py-4 flex items-center justify-between">
-      <Link href="/" className="font-heading text-2xl font-extrabold tracking-wide">
-        PSSPL
-      </Link>
-      <nav className="flex gap-6 font-heading text-lg">
-        <Link href="/about" className="hover:text-accent transition">About</Link>
-        <Link href="/services" className="hover:text-accent transition">Services</Link>
-        <Link href="/products" className="hover:text-accent transition">Products</Link>
-        <Link href="/industries" className="hover:text-accent transition">Industries</Link>
-        <Link href="/partners" className="hover:text-accent transition">Vendors</Link>
-        <Link href="/contact" className="hover:text-accent transition">Contact</Link>
-      </nav>
+    <header
+      className="sticky top-0 z-40 bg-primary/95 backdrop-blur supports-[backdrop-filter]:bg-primary/80 text-white border-b border-white/10"
+      role="banner"
+    >
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="h-12 md:h-14 flex items-center justify-between">
+          <Link
+            href="/"
+            aria-label="Pawanssiddhi Supplier Pvt Ltd — Home"
+            className="flex items-center"
+          >
+            <EmbossedLogo
+              src="/logo-psspl.svg" // ensure file exists in /public
+              width={220}
+              height={80}
+              className="h-10 md:h-11 w-auto"
+              variant="raised" // try "pressed" for engraved look
+            />
+          </Link>
+
+          {/* Desktop nav */}
+          <nav
+            className="hidden md:flex items-center gap-5 lg:gap-6 font-heading text-[15px] lg:text-base"
+            aria-label="Primary"
+            role="navigation"
+          >
+            <NavClient />
+          </nav>
+
+          {/* Mobile nav trigger + menu */}
+          <NavClient mobile />
+        </div>
+      </div>
     </header>
   );
 }
