@@ -1,0 +1,37 @@
+import type { Metadata } from "next";
+import IndustryLayout from "../_components/IndustryLayout";
+import { Factory } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Cement Plants | Pawanssiddhi",
+  description:
+    "Turnkey supply of mechanical, electrical and process solutions for cement plants.",
+  alternates: { canonical: "https://pawanssiddhi.in/industries/cement" },
+  openGraph: { url: "https://pawanssiddhi.in/industries/cement" },
+};
+
+export default function Page() {
+  return (
+    <IndustryLayout
+      title="Cement Plants"
+      subtitle="Improve throughput, reliability, and specific power consumption."
+      Icon={Factory}
+      heroPoints={[
+        "Rotary kiln & VRM support",
+        "Process instrumentation & automation",
+      ]}
+      offerings={[
+        "Commissioning support and debottlenecking studies",
+        "Conveyor/bucket elevator upgrades & belt safety systems",
+        "Baghouse, ID/FD fans, compressors and lubrication skids",
+        "Electrical panels, VFDs, motor control centers",
+      ]}
+      products={[
+        "Kiln seals, refractory anchors, chain, rollers",
+        "Weigh feeders, load cells, belt scales",
+        "Pressure/flow/level/temperature transmitters",
+        "Condition monitoring kits for mills and gearboxes",
+      ]}
+    />
+  );
+}

@@ -1,27 +1,45 @@
+// src/app/about/page.tsx
 "use client";
+
 import { motion, type Variants, cubicBezier } from "framer-motion";
 
+/* =========
+   JSON-LD helper (safe in client; injects structured data)
+   ========= */
+function JsonLd({ data }: { data: object }) {
+  return (
+    <script
+      type="application/ld+json"
+      // eslint-disable-next-line react/no-danger
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+/* =========
+   Data
+   ========= */
 const directors = [
   {
     name: "Pawan Saraf",
     title: "Director",
     photo: "/team/directors/pawan-saraf.jpg",
     description:
-      "Director of the company and also Director in M/s Shah Sonraj Tikamchand Saraf & Kuwar Tikamchand Jewellers Pvt Ltd. With respective turnovers of 25 crore & 75 crore respectively. He is also director in New Era B2B Trading Pvt Ltd, developing software for government entities. Known for continuous growth and leadership.",
+      "Director of the company; also Director in M/s Shah Sonraj Tikamchand Saraf & Kuwar Tikamchand Jewellers Pvt Ltd with respective turnovers of ₹25 Cr & ₹75 Cr. Director at New Era B2B Trading Pvt Ltd (software for government entities). Known for consistent growth and leadership.",
   },
   {
     name: "Tapasya Saraf",
     title: "Director",
     photo: "/team/directors/tapasya-saraf.jpg",
     description:
-      "Director of the company and equal partner in all business ventures. A dynamic lady with ambitious attitude and a target-oriented approach, shouldering equal responsibility in the growth journey.",
+      "Director and equal partner across ventures. Dynamic, ambitious, and target-oriented—shouldering equal responsibility in the company’s growth.",
   },
   {
     name: "Dr. Ashish Varma",
     title: "Director",
     photo: "/team/directors/ashish-varma.jpg",
     description:
-      "A doctor by profession with skills adaptable to business decisions. His immediate attention-paying approach helps a lot in decision making, especially in logical and immediate problem solving.",
+      "A doctor by profession with strong business acumen. Brings sharp, immediate decision-making—especially in logical and time-sensitive problem solving.",
   },
 ];
 
@@ -31,35 +49,35 @@ const teamMembers = [
     title: "Senior Project Manager",
     photo: "/team/team/navalkishor-sharma.jpg",
     description:
-      "Ex-veteran with 35+ years of experience in CSTPS in various departments. Rich professional experience in power industries maintenance & projects. A visionary leader who has navigated the company by transforming every possible idea into opportunities.",
+      "Ex-veteran with 35+ years’ experience at CSTPS across departments. Deep expertise in power-industry maintenance & projects; a visionary who converts ideas into opportunities.",
   },
   {
     name: "Mr. Dinesh Saraf",
     title: "Business Development Manager",
     photo: "/team/team/dinesh-saraf.jpg",
     description:
-      "Business development manager with ex-management team experience in Raisoni group of education. Rich professional excellence in management field, clearly communicating the vision to inspire staff, investors & customers.",
+      "Business development professional; ex-management team at Raisoni Group of Education. Excels at communicating vision and inspiring staff, investors, and customers.",
   },
   {
     name: "Mr. Prasad Jorgewar",
     title: "Business Executive",
     photo: "/team/team/prasad-jorgewar.jpg",
     description:
-      "A dynamic young resource keenly interested in doing business. Graduate in commerce, efficiently handling core daily affairs of cement bag manufacturing unit. Also actively involved in Real Estate business.",
+      "Dynamic commerce graduate handling core daily affairs at a cement bag manufacturing unit; actively engaged in the Real Estate business.",
   },
   {
     name: "Mr. Sagar Sharma",
     title: "Technical Manager (Mechanical & Civil)",
     photo: "/team/team/sagar-sharma.jpg",
     description:
-      "Electrical Engineer with 10 years experience in power plant maintenance work. Runs proprietory firm M/s Babu Enterprises with approx. 10 crore turnover. Currently executing AMC projects in various MAHAGENCO plants satisfactorily.",
+      "Electrical Engineer with 10 years’ power-plant maintenance experience. Runs proprietorship firm M/s Babu Enterprises (~₹10 Cr turnover). Executing AMCs across MAHAGENCO plants.",
   },
   {
     name: "Mr. Ravi Sharma",
     title: "Technical Manager (Electrical)",
     photo: "/team/team/ravi-sharma.jpg",
     description:
-      "Electrical Engineer with 3 years experience in power plant electrical maintenance work. Runs proprietory firm M/s Asmi Engineer, bringing new lines of business including Authorized Service Centre of renowned pumping brands in Chandrapur District.",
+      "Electrical Engineer with 3 years’ experience in power-plant electrical maintenance. Runs proprietorship firm M/s Asmi Engineer; expanding into Authorized Service Centre operations for renowned pumping brands in Chandrapur District.",
   },
 ];
 
@@ -93,9 +111,35 @@ const staggerContainer: Variants = {
   show: { transition: { staggerChildren: 0.15 } },
 };
 
+/* =========
+   Page
+   ========= */
 export default function AboutPage() {
+  // AboutPage structured data (works in client too)
+  const aboutJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "About PSSPL",
+    "description":
+      "Founded in 2020, Pawanssiddhi Supplier Pvt Ltd delivers specialized power-plant supplies, civil & electrical projects, and maintenance services.",
+    "url": "https://pawanssiddhi.in/about",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "Pawanssiddhi Supplier Pvt Ltd",
+      "url": "https://pawanssiddhi.in/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Pawanssiddhi Supplier Pvt Ltd",
+      "url": "https://pawanssiddhi.in/",
+      "logo": { "@type": "ImageObject", "url": "https://pawanssiddhi.in/logo.png" }
+    }
+  };
+
   return (
-    <section className="max-w-6xl mx-auto py-16 px-4">
+    <section className="max-w-6xl mx-auto py-16 px-4" aria-labelledby="about-heading">
+      <JsonLd data={aboutJsonLd} />
+
       {/* Header Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -103,9 +147,13 @@ export default function AboutPage() {
         transition={{ duration: 0.8 }}
         className="bg-white rounded-xl shadow p-8 mb-12"
       >
-        <h1 className="text-3xl md:text-4xl font-heading font-extrabold text-primary mb-4 text-center">
+        <h1
+          id="about-heading"
+          className="text-3xl md:text-4xl font-heading font-extrabold text-primary mb-4 text-center"
+        >
           About PSSPL
         </h1>
+
         <p className="text-lg md:text-xl font-body text-steel mb-8 text-center">
           Founded in 2020, Pawanssiddhi Supplier Pvt Ltd partners with industry leaders to deliver
           specialized power-plant supplies, civil & electrical projects, and maintenance services.
@@ -126,8 +174,7 @@ export default function AboutPage() {
           >
             <h2 className="text-xl font-heading text-primary font-bold mb-2">Our Mission</h2>
             <p className="text-base text-steel text-center font-body">
-              To deliver socially responsible engineering solutions with exceptional client
-              satisfaction.
+              Deliver socially responsible engineering solutions with exceptional client satisfaction.
             </p>
           </motion.div>
 
@@ -141,8 +188,7 @@ export default function AboutPage() {
           >
             <h2 className="text-xl font-heading text-primary font-bold mb-2">Our Vision</h2>
             <p className="text-base text-steel text-center font-body">
-              To become a global leader in industrial supply through ethics, innovation, and
-              relentless service.
+              Become a global leader in industrial supply through ethics, innovation, and relentless service.
             </p>
           </motion.div>
         </div>
@@ -163,11 +209,10 @@ export default function AboutPage() {
               <span className="font-semibold">2020:</span> Company founded
             </li>
             <li>
-              <span className="font-semibold">2021:</span> Partnered with major thermal power
-              plants
+              <span className="font-semibold">2021:</span> Partnered with major thermal power plants
             </li>
             <li>
-              <span className="font-semibold">2022:</span> Expanded into cement plant solutions
+              <span className="font-semibold">2022:</span> Expanded into cement-plant solutions
             </li>
             <li>
               <span className="font-semibold">2025:</span> Initiated global vendor partnerships
@@ -177,8 +222,9 @@ export default function AboutPage() {
       </motion.div>
 
       {/* Directors Section */}
-      <div className="mb-12">
+      <div className="mb-12" aria-labelledby="directors-heading">
         <motion.h2
+          id="directors-heading"
           variants={fadeUpVariants}
           initial="hidden"
           whileInView="show"
@@ -195,13 +241,14 @@ export default function AboutPage() {
           viewport={{ once: true, amount: 0.3 }}
           className="grid lg:grid-cols-3 md:grid-cols-2 gap-8"
         >
-          {directors.map((director, i) => (
-            <motion.div
-              key={i}
+          {directors.map((director) => (
+            <motion.article
+              key={director.name}
               variants={bounceVariants}
               whileHover={{ scale: 1.07, boxShadow: "0 6px 32px #00808055", rotate: 2 }}
               transition={{ type: "spring", bounce: 0.44, duration: 0.42 }}
               className="bg-white rounded-xl shadow-lg p-6 text-center"
+              aria-label={`${director.name}, ${director.title}`}
             >
               <motion.div
                 whileHover={{ scale: 1.13, boxShadow: "0 2px 24px #FF8800" }}
@@ -210,8 +257,11 @@ export default function AboutPage() {
               >
                 <img
                   src={director.photo}
-                  alt={director.name}
+                  alt={`${director.name} – ${director.title}`}
                   className="w-full h-full object-cover"
+                  loading="lazy"
+                  width={96}
+                  height={96}
                   onError={(e) => {
                     e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
                       director.name
@@ -227,14 +277,15 @@ export default function AboutPage() {
               <p className="font-body text-steel text-sm leading-relaxed">
                 {director.description}
               </p>
-            </motion.div>
+            </motion.article>
           ))}
         </motion.div>
       </div>
 
       {/* Team Section */}
-      <div>
+      <div aria-labelledby="team-heading">
         <motion.h2
+          id="team-heading"
           variants={fadeUpVariants}
           initial="hidden"
           whileInView="show"
@@ -251,13 +302,14 @@ export default function AboutPage() {
           viewport={{ once: true, amount: 0.25 }}
           className="grid lg:grid-cols-2 gap-8"
         >
-          {teamMembers.map((member, i) => (
-            <motion.div
-              key={i}
+          {teamMembers.map((member) => (
+            <motion.article
+              key={member.name}
               variants={bounceVariants}
               whileHover={{ scale: 1.06, boxShadow: "0 3px 28px #FF880099" }}
               transition={{ type: "spring", bounce: 0.15, duration: 0.38 }}
               className="bg-offwhite rounded-xl shadow-lg p-6"
+              aria-label={`${member.name}, ${member.title}`}
             >
               <div className="flex items-start gap-4">
                 <motion.div
@@ -267,8 +319,11 @@ export default function AboutPage() {
                 >
                   <img
                     src={member.photo}
-                    alt={member.name}
+                    alt={`${member.name} – ${member.title}`}
                     className="w-full h-full object-cover"
+                    loading="lazy"
+                    width={64}
+                    height={64}
                     onError={(e) => {
                       e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
                         member.name
@@ -287,7 +342,7 @@ export default function AboutPage() {
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </motion.div>
       </div>
